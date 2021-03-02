@@ -1,4 +1,5 @@
 import json
+import sys
 import subprocess
 from ._run import Error
 from ._utils import convert_kwargs_to_cmd_line_args
@@ -13,7 +14,12 @@ def probe(filename, cmd='ffprobe', timeout=None, **kwargs):
             The stderr output can be retrieved by accessing the
             ``stderr`` property of the exception.
     """
-    args = [cmd, '-show_format', '-show_streams', '-of', 'json']
+    try:
+        base_path = sys._MEIPASS
+    except Exception:  
+        base_path = abspath(".")
+
+    args = [base_path + '/' + cmd, '-show_format', '-show_streams', '-of', 'json']
     args += convert_kwargs_to_cmd_line_args(kwargs)
     args += [filename]
 
